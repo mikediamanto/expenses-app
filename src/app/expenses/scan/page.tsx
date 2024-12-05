@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import React, { RefObject, useRef } from 'react';
+import React, { useRef } from 'react';
 
 const ExpensesScanPage = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
