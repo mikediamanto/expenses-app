@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import React, { useRef } from 'react';
+import React, { ChangeEvent, useRef } from 'react';
 
 const ExpensesScanPage = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -63,8 +63,8 @@ const ExpensesScanPage = () => {
     document.body.removeChild(a);
   };
 
-  const captureMobileImage = (event) => {
-    const file = event.target.files[0];
+  const captureMobileImage = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target?.files?.[0];
     if (file) {
       // Create a URL for the captured file and display it
       const imageURL = URL.createObjectURL(file);
