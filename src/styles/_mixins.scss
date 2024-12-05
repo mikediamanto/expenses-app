@@ -1,0 +1,13 @@
+@mixin on-hover {
+  @media (hover: hover) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+@mixin pointer {
+  @media (hover: hover) {
+    cursor: pointer;
+  }
+}
