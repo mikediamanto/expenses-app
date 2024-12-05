@@ -10,12 +10,14 @@ const ExpensesScanPage = () => {
   const mediaStreamRef = useRef<MediaStream | null>();
 
   const openCamera = () => {
-    navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-      if (!videoRef?.current) return;
+    navigator.mediaDevices
+      .getUserMedia({ video: { facingMode: 'environment' } })
+      .then((stream) => {
+        if (!videoRef?.current) return;
 
-      mediaStreamRef.current = stream;
-      videoRef.current.srcObject = stream;
-    });
+        mediaStreamRef.current = stream;
+        videoRef.current.srcObject = stream;
+      });
   };
 
   const captureImage = () => {
@@ -61,10 +63,30 @@ const ExpensesScanPage = () => {
     document.body.removeChild(a);
   };
 
+  const captureMobileImage = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Create a URL for the captured file and display it
+      const imageURL = URL.createObjectURL(file);
+      imageRef.current!.src = imageURL;
+      imageRef.current!.style.display = 'block';
+    }
+  };
+
   return (
     <>
-      <video id="camera" ref={videoRef} autoPlay></video>
-      <div className="flex gap-2">
+      <input
+        type="file"
+        id="cameraInput"
+        accept="image/*"
+        capture="environment"
+        onChange={captureMobileImage}
+      />
+      <br />
+
+      <video id="camera" ref={videoRef} autoPlay playsInline></video>
+
+      <div className="flex flex-col gap-2">
         <Button id="capture" onClick={openCamera}>
           Open Camera
         </Button>
