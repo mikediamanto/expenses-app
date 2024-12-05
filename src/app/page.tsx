@@ -6,14 +6,17 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { getSession } from '@/lib/session';
 import { useEffect, useState } from 'react';
+import { User } from '@supabase/supabase-js';
+import { createExpense } from '@/lib/database/expenses';
 
 export default function Home() {
   const router = useRouter();
-  const [session, setSession] = useState<{ username: string } | null>(null);
+  const [session, setSession] = useState<User | null>(null);
 
   useEffect(() => {
     async function getData() {
       const response = await getSession();
+      await createExpense();
       console.log(response);
       setSession(response);
     }
@@ -23,7 +26,7 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        {session && <p>{session.username}</p>}
+        {session && <p>{session.email}</p>}
 
         {!session && (
           <Button onClick={() => router.push('/login')}>Login</Button>

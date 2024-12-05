@@ -1,13 +1,18 @@
 'use server';
 
 import { cookies } from 'next/headers';
+import { createClient } from './supabase/server-client';
+import { User } from '@supabase/supabase-js';
 
-export const getSession = async () => {
-  const sessionCookie = (await cookies()).get('session')?.value;
+export const getSession = async (): Promise<User | null> => {
+  const supabase = await createClient();
+  const response = await supabase.auth.getUser();
 
-  if (!sessionCookie) return null;
+  if (!response || response.error) {
+    return null;
+  }
 
-  return JSON.parse(atob(sessionCookie));
+  return response.data.user;
 };
 
 export const createSession = async (username: string) => {

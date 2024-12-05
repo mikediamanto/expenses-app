@@ -12,11 +12,10 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { login } from './actions';
-import { useActionState } from 'react';
+import { loginSupabase } from './actions';
 
 export function LoginForm() {
-  const [state, formAction] = useActionState(login, { message: '' });
+  // const [state, formAction] = useActionState(loginSupabase, { message: '' });
 
   return (
     <Card className="mx-auto max-w-sm">
@@ -27,7 +26,7 @@ export function LoginForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="grid gap-4" action={formAction}>
+        <form className="grid gap-4" action={loginSupabase}>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -47,7 +46,7 @@ export function LoginForm() {
             </div>
             <Input id="password" type="password" required name="password" />
           </div>
-          {state.message && <p>{state.message}</p>}
+          {/* {state.message && <p>{state.message}</p>} */}
           <Button type="submit" className="w-full">
             Login
           </Button>
