@@ -1,13 +1,27 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import React, { ChangeEvent, useRef } from 'react';
+import { getImages, saveImage } from '@/lib/storage/storage';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 const ExpensesScanPage = () => {
+  const [images, setImages] = useState<string[]>([]);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const mediaStreamRef = useRef<MediaStream | null>();
+
+  useEffect(() => {
+    async function loadData() {
+      const urls = await getImages();
+      console.log(urls);
+
+      setImages(urls);
+    }
+
+    loadData();
+  }, [setImages]);
 
   const openCamera = () => {
     navigator.mediaDevices
@@ -63,15 +77,18 @@ const ExpensesScanPage = () => {
     document.body.removeChild(a);
   };
 
-  const captureMobileImage = (event: ChangeEvent<HTMLInputElement>) => {
+  const captureMobileImage = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target?.files?.[0];
     if (file) {
+      await saveImage(file);
       // Create a URL for the captured file and display it
       const imageURL = URL.createObjectURL(file);
       imageRef.current!.src = imageURL;
       imageRef.current!.style.display = 'block';
     }
   };
+
+  console.log(images);
 
   return (
     <>
@@ -84,7 +101,7 @@ const ExpensesScanPage = () => {
       />
       <br />
 
-      <video id="camera" ref={videoRef} autoPlay playsInline></video>
+      {/* <video id="camera" ref={videoRef} autoPlay playsInline></video> */}
 
       <div className="flex flex-col gap-2">
         <Button id="capture" onClick={openCamera}>
@@ -101,13 +118,32 @@ const ExpensesScanPage = () => {
 
         <Button onClick={downloadImage}>Download Image</Button>
       </div>
-      <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+      {/* <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
       <img
         ref={imageRef}
         id="capturedImage"
         alt="Captured Image"
         style={{ marginTop: '20px', border: '1px solid #ddd', display: 'none' }}
-      />
+      /> */}
+
+      {images.map((imageUrl) => (
+        // <Image
+        //   src={imageUrl}
+        //   alt="image"
+        //   key={imageUrl}
+        //   width={80}
+        //   height={80}
+        // />
+
+        <img
+          src={imageUrl}
+          key={imageUrl}
+          width={80}
+          height={80}
+          alt={imageUrl}
+          loading="lazy"
+        />
+      ))}
     </>
   );
 };
