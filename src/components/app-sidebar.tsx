@@ -36,8 +36,12 @@ const data = {
     },
     {
       title: 'Expenses',
-      url: '/expenses',
+      url: '#',
       items: [
+        {
+          title: 'History',
+          url: '/expenses',
+        },
         {
           title: 'Scan',
           url: '/expenses/scan',
