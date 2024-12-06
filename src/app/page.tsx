@@ -2,35 +2,11 @@
 
 import Image from 'next/image';
 import styles from './page.module.css';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { getSession } from '@/lib/session';
-import { useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
-import { createExpense } from '@/lib/database/expenses';
 
 export default function Home() {
-  const router = useRouter();
-  const [session, setSession] = useState<User | null>(null);
-
-  useEffect(() => {
-    async function getData() {
-      const response = await getSession();
-      await createExpense();
-      console.log(response);
-      setSession(response);
-    }
-    getData();
-  }, []);
-
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        {session && <p>{session.email}</p>}
-
-        {!session && (
-          <Button onClick={() => router.push('/login')}>Login</Button>
-        )}
         <Image
           className={styles.logo}
           src="/next.svg"

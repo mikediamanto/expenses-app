@@ -12,7 +12,25 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { loginSupabase } from './actions';
+import { loginSupabase } from '@/lib/session';
+import { useFormStatus } from 'react-dom';
+import { Loader2 } from 'lucide-react';
+
+const SubmitButton = () => {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" className="w-full">
+      {pending && (
+        <>
+          <Loader2 className="animate-spin" />
+          Please wait
+        </>
+      )}
+      {!pending && <>Login</>}
+    </Button>
+  );
+};
 
 export function LoginForm() {
   // const [state, formAction] = useActionState(loginSupabase, { message: '' });
@@ -47,9 +65,7 @@ export function LoginForm() {
             <Input id="password" type="password" required name="password" />
           </div>
           {/* {state.message && <p>{state.message}</p>} */}
-          <Button type="submit" className="w-full">
-            Login
-          </Button>
+          <SubmitButton />
           <Button variant="outline" className="w-full">
             Login with Google
           </Button>
