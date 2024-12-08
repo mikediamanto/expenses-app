@@ -22,14 +22,12 @@ export const getImages = async () => {
   const { data } = await supabase.storage.from('avatars').list('receipts');
   if (!data) return [];
 
-  const urls = await Promise.all(
-    data.map(async ({ name }) => {
-      const { data } = await supabase.storage
-        .from('avatars')
-        .getPublicUrl(`receipts/${name}}`);
-      return data.publicUrl.replace('%7D', '');
-    })
-  );
+  const urls = data.map(({ name }) => {
+    const url = supabase.storage
+      .from('avatars')
+      .getPublicUrl(`receipts/${name}`).data.publicUrl;
+    return url.replace(/%7D$/, '');
+  });
 
   return urls.filter((url) => !url.includes('.empty'));
 };

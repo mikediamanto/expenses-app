@@ -7,27 +7,23 @@ import { ProductType } from './types';
 
 export const createExpense = async (formData: FormData) => {
   const supabase = await createClient();
-  const product = {
-    name: formData.get('productName'),
-    type: ProductType.supermarket,
-  };
+  const productName = formData.get('productName') as string;
+  const amount = Number.parseFloat(formData.get('amount') as string);
 
-  let productEntity: any = (
-    await supabase.from('products').select('id').eq('name', product.name)
-  )?.data?.[0];
+  let existingProduct = (
+    await supabase.from('products').select('id').eq('name', productName)
+  ).data?.[0];
 
-  if (!productEntity) {
-    const insertResponse = await supabase.from('products').insert(product);
-    console.log(insertResponse);
+  if (!existingProduct) {
+    const insertResponse = await supabase
+      .from('products')
+      .insert({ name: productName, type: ProductType.supermarket });
+    existingProduct = insertResponse.data?.[0];
   }
 
-  productEntity = (
-    await supabase.from('products').select('id').eq('name', product.name)
-  )?.data?.[0];
-
   const expense = {
-    amount: Number.parseFloat(formData.get('amount') as string),
-    product_id: productEntity?.id,
+    amount,
+    product_id: existingProduct?.id,
   };
 
   await supabase.from('expenses').insert(expense);
